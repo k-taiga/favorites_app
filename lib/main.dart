@@ -1,3 +1,4 @@
+import 'package:favorites_app/item_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'items/items_provider.dart';
@@ -35,20 +36,29 @@ class MyHomePage extends ConsumerWidget {
       body: ListView.builder(
           itemBuilder: (context, index) {
             final item = items[index];
+            // itemがfavoritesに含まれているかどうかを確認
             final isFavorite = favorites.valueOrNull?.contains(item) ?? false;
             return ListTile(
-                leading: IconButton(
-                    onPressed: () {
-                      if (isFavorite) {
-                        ref.read(favoritesProvider.notifier).removeItem(item);
-                      } else {
-                        ref.read(favoritesProvider.notifier).addItem(item);
-                      }
-                    },
-                    icon: isFavorite
-                        ? const Icon(Icons.favorite, color: Colors.pink)
-                        : const Icon(Icons.favorite_outline)),
-                title: Text(items[index]));
+              leading: IconButton(
+                  onPressed: () {
+                    if (isFavorite) {
+                      ref.read(favoritesProvider.notifier).removeItem(item);
+                    } else {
+                      ref.read(favoritesProvider.notifier).addItem(item);
+                    }
+                  },
+                  icon: isFavorite
+                      ? const Icon(Icons.favorite, color: Colors.pink)
+                      : const Icon(Icons.favorite_outline)),
+              title: Text(items[index]),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ItemDetailPage(item: item)),
+                );
+              },
+            );
           },
           itemCount: items.length),
     );
